@@ -3,14 +3,15 @@ import { Button, Input, Switch, Text, View, XStack, YStack, Label } from 'tamagu
 import { useNavigation } from '@react-navigation/native';
 import { StackNavigationProp } from '@react-navigation/stack';
 
-import { useProfileStore } from '../../store';
+import { useProfile, useSetProfile } from '../../store/useProfileStore';
 import type { OnboardingStackParamList } from '../../navigation/types';
 
 type Step4NavigationProp = StackNavigationProp<OnboardingStackParamList, 'Step4'>;
 
 export const Step4Screen: React.FC = () => {
   const navigation = useNavigation<Step4NavigationProp>();
-  const { profile, setProfile } = useProfileStore();
+  const profile = useProfile();
+  const setProfile = useSetProfile();
   const [hasVariable, setHasVariable] = useState(profile?.hasVariablePay || false);
   const [average, setAverage] = useState(profile?.variablePayAverage?.toString() || '');
 

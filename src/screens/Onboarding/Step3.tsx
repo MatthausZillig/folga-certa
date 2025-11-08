@@ -7,7 +7,7 @@ import { useForm, Controller } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import MaskInput from 'react-native-mask-input';
 
-import { useProfileStore } from '../../store';
+import { useProfile, useSetProfile } from '../../store/useProfileStore';
 import type { OnboardingStackParamList } from '../../navigation/types';
 import type { PaymentFrequency, PaymentPeriod } from '../../types';
 import { step3Schema, type Step3Data, formatCurrency } from '../../utils';
@@ -28,7 +28,8 @@ const periodOptions: { value: PaymentPeriod; label: string; description: string 
 
 export const Step3Screen: React.FC = () => {
   const navigation = useNavigation<Step3NavigationProp>();
-  const { profile, setProfile } = useProfileStore();
+  const profile = useProfile();
+  const setProfile = useSetProfile();
 
   const {
     control,

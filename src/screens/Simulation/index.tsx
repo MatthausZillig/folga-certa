@@ -4,14 +4,17 @@ import { ScrollView, TouchableOpacity } from 'react-native';
 import { useForm, Controller } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import MaskInput from 'react-native-mask-input';
+import { useNavigation } from '@react-navigation/native';
 
-import { useProfileStore, useSimulationStore } from '../../store';
+import { useProfile } from '../../store/useProfileStore';
+import { useAddSimulation } from '../../store/useSimulationStore';
 import { simulationSchema, type SimulationData, dateMask, calculateVacation, formatCurrencyBR } from '../../utils';
 import type { VacationResult } from '../../utils/calcVacation';
 
 export const SimulationScreen: React.FC = () => {
-  const { profile } = useProfileStore();
-  const { addSimulation } = useSimulationStore();
+  const navigation = useNavigation();
+  const profile = useProfile();
+  const addSimulation = useAddSimulation();
   const [result, setResult] = useState<VacationResult | null>(null);
 
   const {
@@ -60,14 +63,32 @@ export const SimulationScreen: React.FC = () => {
       <View flex={1} backgroundColor="$background">
         <ScrollView>
           <YStack padding="$6" gap="$5">
-            <YStack gap="$2">
-              <Text fontSize="$8" fontWeight="700" color="$text">
-                Resultado da Simulação
-              </Text>
-              <Text fontSize="$4" color="$muted">
-                Confira quanto você vai receber
-              </Text>
-            </YStack>
+            <XStack alignItems="center" gap="$3">
+              <TouchableOpacity onPress={() => setResult(null)}>
+                <View
+                  width={40}
+                  height={40}
+                  borderRadius="$3"
+                  backgroundColor="$card"
+                  borderWidth={1}
+                  borderColor="$border"
+                  alignItems="center"
+                  justifyContent="center"
+                >
+                  <Text fontSize="$6" color="$text">
+                    ←
+                  </Text>
+                </View>
+              </TouchableOpacity>
+              <YStack flex={1} gap="$1">
+                <Text fontSize="$8" fontWeight="700" color="$text">
+                  Resultado da Simulação
+                </Text>
+                <Text fontSize="$4" color="$muted">
+                  Confira quanto você vai receber
+                </Text>
+              </YStack>
+            </XStack>
 
             <YStack
               backgroundColor="$accent"
@@ -214,14 +235,32 @@ export const SimulationScreen: React.FC = () => {
     <View flex={1} backgroundColor="$background">
       <ScrollView>
         <YStack padding="$6" gap="$5">
-          <YStack gap="$2">
-            <Text fontSize="$8" fontWeight="700" color="$text">
-              Simular Férias
-            </Text>
-            <Text fontSize="$4" color="$muted">
-              Preencha os dados para calcular quanto você vai receber
-            </Text>
-          </YStack>
+          <XStack alignItems="center" gap="$3">
+            <TouchableOpacity onPress={() => navigation.goBack()}>
+              <View
+                width={40}
+                height={40}
+                borderRadius="$3"
+                backgroundColor="$card"
+                borderWidth={1}
+                borderColor="$border"
+                alignItems="center"
+                justifyContent="center"
+              >
+                <Text fontSize="$6" color="$text">
+                  ←
+                </Text>
+              </View>
+            </TouchableOpacity>
+            <YStack flex={1} gap="$1">
+              <Text fontSize="$8" fontWeight="700" color="$text">
+                Simular Férias
+              </Text>
+              <Text fontSize="$4" color="$muted">
+                Preencha os dados para calcular quanto você vai receber
+              </Text>
+            </YStack>
+          </XStack>
 
           <YStack gap="$2">
             <Text fontSize="$3" color="$text" fontWeight="600">

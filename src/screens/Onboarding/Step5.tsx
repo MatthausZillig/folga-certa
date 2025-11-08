@@ -4,7 +4,7 @@ import { useNavigation } from '@react-navigation/native';
 import { StackNavigationProp } from '@react-navigation/stack';
 import { ScrollView } from 'react-native';
 
-import { useProfileStore } from '../../store';
+import { useProfile, useSetProfile } from '../../store/useProfileStore';
 import type { OnboardingStackParamList } from '../../navigation/types';
 import type { Deduction } from '../../types';
 
@@ -12,7 +12,8 @@ type Step5NavigationProp = StackNavigationProp<OnboardingStackParamList, 'Step5'
 
 export const Step5Screen: React.FC = () => {
   const navigation = useNavigation<Step5NavigationProp>();
-  const { profile, setProfile } = useProfileStore();
+  const profile = useProfile();
+  const setProfile = useSetProfile();
   const [deductions, setDeductions] = useState<Deduction[]>(profile?.deductions || []);
   const [label, setLabel] = useState('');
   const [amount, setAmount] = useState('');

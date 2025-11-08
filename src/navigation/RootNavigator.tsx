@@ -37,8 +37,8 @@ export const RootNavigator: React.FC = () => {
 
   if (isLoading) {
     return (
-      <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center', backgroundColor: '#F8F9FA' }}>
-        <ActivityIndicator size="large" color="#343A40" />
+      <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center', backgroundColor: '#EBEFFF' }}>
+        <ActivityIndicator size="large" color="#3960FB" />
       </View>
     );
   }

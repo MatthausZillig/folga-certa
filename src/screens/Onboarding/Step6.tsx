@@ -1,14 +1,14 @@
 import React from 'react';
 import { Button, Text, View, YStack } from 'tamagui';
 
-import { useProfileStore } from '../../store';
+import { useProfile } from '../../store/useProfileStore';
 
 type Step6Props = {
   onComplete: () => void;
 };
 
 export const Step6Screen: React.FC<Step6Props> = ({ onComplete }) => {
-  const { profile } = useProfileStore();
+  const profile = useProfile();
 
   return (
     <View flex={1} backgroundColor="$background" padding="$6">

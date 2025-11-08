@@ -5,7 +5,7 @@ import { StackNavigationProp } from '@react-navigation/stack';
 import { useForm, Controller } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 
-import { useProfileStore } from '../../store';
+import { useProfile, useSetProfile } from '../../store/useProfileStore';
 import type { OnboardingStackParamList } from '../../navigation/types';
 import { step1Schema, type Step1Data } from '../../utils/validations';
 
@@ -13,7 +13,8 @@ type Step1NavigationProp = StackNavigationProp<OnboardingStackParamList, 'Step1'
 
 export const Step1Screen: React.FC = () => {
   const navigation = useNavigation<Step1NavigationProp>();
-  const { profile, setProfile } = useProfileStore();
+  const profile = useProfile();
+  const setProfile = useSetProfile();
 
   const {
     control,

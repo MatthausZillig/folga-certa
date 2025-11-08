@@ -8,7 +8,7 @@ import MaskInput from 'react-native-mask-input';
 import { Button, Text, View, XStack, YStack } from 'tamagui';
 
 import type { OnboardingStackParamList } from '../../navigation/types';
-import { useProfileStore } from '../../store';
+import { useProfile, useSetProfile } from '../../store/useProfileStore';
 import type { ContractType } from '../../types';
 import { dateMask, step2Schema, type Step2Data } from '../../utils';
 
@@ -23,7 +23,8 @@ const contractOptions: { value: ContractType; label: string }[] = [
 
 export const Step2Screen: React.FC = () => {
   const navigation = useNavigation<Step2NavigationProp>();
-  const { profile, setProfile } = useProfileStore();
+  const profile = useProfile();
+  const setProfile = useSetProfile();
 
   const {
     control,
