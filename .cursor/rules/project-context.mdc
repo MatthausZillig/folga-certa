@@ -1,0 +1,227 @@
+---
+alwaysApply: true
+---
+
+Você é o pair programmer de um app mobile chamado **Folga Certa** (nome temporário), desenvolvido em **React Native + Expo**, com:
+
+- **Gerenciamento de estado:** Zustand (+ persist)
+- **Storage local:** @react-native-async-storage/async-storage
+- **UI:** Tamagui
+- **Backend:** Supabase (Auth, DB, Edge Functions)
+- Foco em **local-first**: tudo importante deve funcionar offline e sincronizar depois.
+
+---
+
+## Objetivo do app
+
+Construir um app moderno, simples e confiável para trabalhadores CLT que:
+
+1. Calculem **quanto vão receber antes de sair de férias**.
+2. Entendam o que acontece **no mês das férias** (salário normal x férias).
+3. Saibam **quanto vão receber no mês de retorno**.
+4. Futuramente permita outros cálculos trabalhistas (13º, rescisão, etc.), reaproveitando o mesmo perfil.
+
+O app deve:
+- Falar em linguagem simples.
+- Ser extremamente claro e visual.
+- Explicar, sempre que possível, como chegou nos números (sem juridiquês pesado).
+- Ser pensado **para o contexto brasileiro (CLT)**.
+
+---
+
+## Conceitos centrais
+
+### 1. Local-first
+
+- Todos os dados de perfil e simulações devem ser salvos localmente usando Zustand + persist + AsyncStorage.
+- O usuário pode:
+  - usar o app **sem criar conta**;
+  - criar uma conta depois, e então sincronizamos dados com o Supabase.
+- Se conectado e autenticado, o app lê/escreve no Supabase, mas sempre mantendo uma cópia local para carregamento rápido.
+- Em caso de conflito entre dados locais e remotos, use a regra simples:
+  - o registro com `updatedAt` mais recente vence.
+
+### 2. Perfil trabalhista (EmploymentProfile)
+
+Esse perfil é preenchido via onboarding multi-step e serve como base para todas as simulações.
+
+Campos principais (podem ser estendidos):
+
+- `displayName`
+- `admissionDate`
+- `contractType` (indeterminado, experiencia, aprendiz, etc.)
+- `baseSalary`
+- `paymentFrequency` (mensal, quinzenal, semanal)
+- `hasVariablePay`
+- `variablePayAverage` (opcional)
+- `deductions` (lista de descontos fixos mensais opcionais)
+- `useOfficialTables` (para usar tabelas oficiais de INSS/IRRF vindas do backend)
+
+O Cursor deve:
+- Sugerir tipos fortes em TypeScript.
+- Criar stores e hooks para acessar/atualizar esse perfil em toda a aplicação.
+
+### 3. Simulação de férias
+
+Fluxo padrão:
+
+1. Usuário acessa Home.
+2. Clica em **“Simular férias”**.
+3. Informa:
+   - data de início das férias,
+   - quantidade de dias,
+   - se vai vender dias,
+   - se quer adiantamento de 13º.
+4. O app calcula e exibe:
+   - **Valor líquido recebido antes das férias**.
+   - Impacto no salário do mês das férias.
+   - Quanto entra no mês de retorno.
+   - Uma timeline simples com marcos:
+     - Hoje → Pagamento férias → Início → Fim → Próximo salário.
+
+Implementação:
+
+- Cálculo pode ser feito:
+  - localmente (com regras default),
+  - ou chamando uma função do Supabase (quando online), que aplica as regras parametrizadas.
+- A resposta deve ser exibida em componentes claros, com copy acessível.
+
+---
+
+## Fluxo principal do app
+
+### Onboarding (multi-step)
+
+1. Boas-vindas + `displayName`.
+2. Dados do vínculo: `admissionDate`, `contractType`.
+3. Salário: `baseSalary`, `paymentFrequency`.
+4. Variáveis (opcional): `hasVariablePay`, `variablePayAverage`.
+5. Descontos (opcional): lista de descontos fixos.
+6. Oferecer criação de conta:
+   - Se criar: envia dados para Supabase.
+   - Se não: mantém tudo local.
+
+### Pós-onboarding
+
+- **Home**
+  - Card com resumo do perfil.
+  - Botão “Simular férias”.
+  - Lista das últimas simulações.
+
+- **Simulação**
+  - Form simples.
+  - Resultado em cartões + timeline.
+
+- **Perfil**
+  - Editar dados.
+  - Mostrar se está sincronizado com conta Supabase.
+
+---
+
+## Tech stack & padrões obrigatórios
+
+### Frontend
+
+- **React Native + Expo**
+- **TypeScript obrigatório**
+- **Zustand** para estado global:
+  - Criar stores dedicadas:
+    - `useAuthStore`
+    - `useProfileStore`
+    - `useSimulationStore`
+  - Usar `persist` com `AsyncStorage`.
+
+- **AsyncStorage**
+  - Usado via `zustand/middleware` para persistência.
+  - Apenas para dados necessários (perfil, simulações, preferências).
+
+- **Tamagui**
+  - Usar para layout, tipografia, botões, inputs, etc.
+  - Configurar **tema claro e escuro** com base na paleta abaixo.
+  - Evitar estilos in-line soltos; preferir tokens e variáveis de tema.
+
+### Backend (Supabase)
+
+- Usar Supabase para:
+  - Auth (email/senha, provedor social se desejado).
+  - Tabelas:
+    - `profiles`
+    - `employment_profiles`
+    - `vacation_simulations`
+    - `tax_tables` (regras INSS/IRRF)
+  - Edge Functions ou RPC para cálculos centralizados.
+- Sempre respeitar RLS usando `auth.uid()`.
+
+### Organização de código sugerida
+
+- `src/`
+  - `components/`
+  - `screens/`
+    - `Onboarding/`
+    - `Home/`
+    - `Simulation/`
+    - `Profile/`
+  - `store/`
+  - `services/`
+    - `supabase/`
+    - `api/` (simulações, sync)
+  - `theme/`
+    - `tamagui.config.ts`
+    - `colors.ts`
+  - `types/`
+  - `utils/`
+
+---
+
+## Design & Paleta de Cores
+
+Usar essa paleta como base para tema claro e escuro:
+
+- `#F8F9FA`
+- `#E9ECEF`
+- `#DEE2E6`
+- `#CED4DA`
+- `#ADB5BD`
+- `#6C757D`
+- `#495057`
+- `#343A40`
+- `#212529`
+
+### Diretrizes
+
+- **Tema claro**:
+  - Background principal: `#F8F9FA` / `#E9ECEF`
+  - Cards: `#FFFFFF` ou `#F8F9FA` com bordas `#DEE2E6`
+  - Texto principal: `#212529`
+  - Texto secundário: `#6C757D`
+  - Ações: usar `#343A40` / `#495057` como cores fortes.
+
+- **Tema escuro**:
+  - Background principal: `#121212` ou `#212529`
+  - Cards: `#343A40` / `#212529`
+  - Texto principal: `#F8F9FA`
+  - Texto secundário: `#ADB5BD`
+  - Borda: `#495057`
+  - Evitar contraste baixo; garantir boa legibilidade.
+
+- Criar tokens Tamagui (`$background`, `$card`, `$text`, `$muted`, `$accent`) baseados nessas cores.
+- UI clean, com poucos elementos, foco nos números e timeline.
+
+---
+
+## Estilo de código
+
+- Sempre usar TypeScript.
+- Components funcionais com hooks.
+- Separar lógica de UI (ex: hooks para simulação vs componente de apresentação).
+- Manter nomes claros de variáveis e tipos.
+- Não usar libs aleatórias para estado global além de Zustand.
+- Não usar estilos fora do Tamagui sem motivo forte.
+
+---
+
+Quando gerar código, assuma sempre:
+- Que o app é um simulador sério, confiável, mas acessível.
+- Que o usuário é CLT comum, não dev.
+- Que local-first e clareza visual são prioridades absolutas.
+
