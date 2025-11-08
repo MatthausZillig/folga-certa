@@ -8,12 +8,16 @@ type ProfileState = {
   profile: EmploymentProfile | null;
   setProfile: (partial: Partial<EmploymentProfile>) => void;
   resetProfile: () => void;
+  _version: number;
 };
+
+const STORE_VERSION = 2;
 
 export const useProfileStore = create<ProfileState>()(
   persist(
     (set) => ({
       profile: null,
+      _version: STORE_VERSION,
       setProfile: (partial) =>
         set((state) => ({
           profile: {
@@ -26,7 +30,22 @@ export const useProfileStore = create<ProfileState>()(
     }),
     {
       name: 'folga-certa-profile',
+      version: STORE_VERSION,
       storage: createJSONStorage(() => AsyncStorage),
+      migrate: (persistedState: any, version: number) => {
+        if (version < STORE_VERSION) {
+          return {
+            profile: null,
+            _version: STORE_VERSION,
+          };
+        }
+        return persistedState;
+      },
+      onRehydrateStorage: () => (state, error) => {
+        if (error) {
+          AsyncStorage.removeItem('folga-certa-profile');
+        }
+      },
     }
   )
 );

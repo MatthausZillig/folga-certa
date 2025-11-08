@@ -28,7 +28,7 @@ export const SimulationTicket: React.FC<SimulationTicketProps> = ({
       backgroundColor="$card"
       borderRadius="$4"
       borderWidth={1}
-      borderColor="#ADB5BD"
+      borderColor="$border"
       overflow="hidden"
       position="relative"
     >
@@ -84,7 +84,7 @@ export const SimulationTicket: React.FC<SimulationTicketProps> = ({
           alignItems="center"
           backgroundColor="$cardAlt"
           borderTopWidth={1.5}
-          borderTopColor="#ADB5BD"
+          borderTopColor="$border"
           borderStyle="dashed"
         >
           <YStack gap="$1">
@@ -107,7 +107,7 @@ export const SimulationTicket: React.FC<SimulationTicketProps> = ({
         borderRadius={6} 
         backgroundColor="$background"
         borderWidth={1}
-        borderColor="#ADB5BD"
+        borderColor="$border"
         borderRightWidth={0}
         transform={[{ translateY: -6 }]}
       />
@@ -120,7 +120,7 @@ export const SimulationTicket: React.FC<SimulationTicketProps> = ({
         borderRadius={6} 
         backgroundColor="$background"
         borderWidth={1}
-        borderColor="#ADB5BD"
+        borderColor="$border"
         borderLeftWidth={0}
         transform={[{ translateY: -6 }]}
       />

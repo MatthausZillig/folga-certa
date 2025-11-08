@@ -2,6 +2,11 @@ import { createFont, createTamagui, createTokens } from 'tamagui';
 
 const palette = {
   white: '#FFFFFF',
+  lavender: '#EBEFFF',
+  periwinkle: '#C2CEFE',
+  neonBlue: '#3960FB',
+  pennBlue: '#14258B',
+  black: '#000000',
   gray50: '#F8F9FA',
   gray100: '#E9ECEF',
   gray200: '#DEE2E6',
@@ -9,35 +14,36 @@ const palette = {
   gray400: '#ADB5BD',
   gray500: '#6C757D',
   gray600: '#495057',
-  gray700: '#343A40',
-  gray800: '#212529',
 };
 
 const tokens = createTokens({
   color: {
-    background: palette.gray50,
-    backgroundDark: palette.gray800,
+    background: palette.lavender,
+    backgroundDark: palette.pennBlue,
     card: palette.white,
-    cardAlt: palette.gray50,
-    cardDark: palette.gray700,
-    text: palette.gray800,
-    textDark: palette.gray50,
+    cardAlt: palette.lavender,
+    cardDark: palette.pennBlue,
+    text: palette.black,
+    textDark: palette.white,
     muted: palette.gray500,
     mutedDark: palette.gray400,
-    border: palette.gray200,
-    borderDark: palette.gray600,
-    accent: palette.gray700,
-    accentAlt: palette.gray600,
-    accentDark: palette.gray50,
-    accentDarkAlt: palette.gray100,
+    border: palette.gray300,
+    borderDark: palette.periwinkle,
+    accent: palette.neonBlue,
+    accentAlt: palette.periwinkle,
+    accentDark: palette.neonBlue,
+    accentDarkAlt: palette.periwinkle,
   },
   radius: {
     0: 0,
     2: 2,
-    4: 4,
-    6: 6,
-    8: 8,
-    true: 4,
+    3: 8,
+    4: 12,
+    5: 16,
+    6: 20,
+    7: 24,
+    8: 32,
+    true: 12,
   },
   size: {
     0: 0,
@@ -182,4 +188,3 @@ export type AppTamaguiConfig = typeof tamaguiConfig;
 declare module 'tamagui' {
   interface TamaguiCustomConfig extends AppTamaguiConfig {}
 }
-

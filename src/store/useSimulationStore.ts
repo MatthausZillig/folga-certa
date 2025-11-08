@@ -18,12 +18,16 @@ type SimulationState = {
   simulations: VacationSimulation[];
   addSimulation: (simulation: SimulationInput) => void;
   clearSimulations: () => void;
+  _version: number;
 };
+
+const STORE_VERSION = 2;
 
 export const useSimulationStore = create<SimulationState>()(
   persist(
     (set) => ({
       simulations: [],
+      _version: STORE_VERSION,
       addSimulation: (simulation) =>
         set((state) => ({
           simulations: [
@@ -39,7 +43,22 @@ export const useSimulationStore = create<SimulationState>()(
     }),
     {
       name: 'folga-certa-simulations',
+      version: STORE_VERSION,
       storage: createJSONStorage(() => AsyncStorage),
+      migrate: (persistedState: any, version: number) => {
+        if (version < STORE_VERSION) {
+          return {
+            simulations: [],
+            _version: STORE_VERSION,
+          };
+        }
+        return persistedState;
+      },
+      onRehydrateStorage: () => (state, error) => {
+        if (error) {
+          AsyncStorage.removeItem('folga-certa-simulations');
+        }
+      },
     }
   )
 );

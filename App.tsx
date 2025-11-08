@@ -1,3 +1,4 @@
+import AsyncStorage from '@react-native-async-storage/async-storage';
 import { NavigationContainer } from '@react-navigation/native';
 import * as SplashScreen from 'expo-splash-screen';
 import React, { useEffect, useState } from 'react';
@@ -14,9 +15,23 @@ const App: React.FC = () => {
   useEffect(() => {
     const prepare = async () => {
       try {
+        const keys = await AsyncStorage.getAllKeys();
+        const stores = keys.filter(key => key.startsWith('folga-certa-'));
+        
+        for (const key of stores) {
+          try {
+            const value = await AsyncStorage.getItem(key);
+            if (value) {
+              JSON.parse(value);
+            }
+          } catch (parseError) {
+            await AsyncStorage.removeItem(key);
+          }
+        }
+        
         await new Promise(resolve => setTimeout(resolve, 100));
       } catch (error) {
-        // Ignore
+        await AsyncStorage.clear();
       } finally {
         setIsReady(true);
         SplashScreen.hideAsync();
@@ -28,8 +43,8 @@ const App: React.FC = () => {
 
   if (!isReady) {
     return (
-      <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center', backgroundColor: '#F8F9FA' }}>
-        <ActivityIndicator size="large" color="#343A40" />
+      <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center', backgroundColor: '#EBEFFF' }}>
+        <ActivityIndicator size="large" color="#3960FB" />
       </View>
     );
   }
