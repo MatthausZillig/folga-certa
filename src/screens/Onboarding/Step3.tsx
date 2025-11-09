@@ -2,6 +2,7 @@ import React from 'react';
 import { Button, Text, View, YStack, XStack, RadioGroup, Label } from 'tamagui';
 import { useNavigation } from '@react-navigation/native';
 import { StackNavigationProp } from '@react-navigation/stack';
+import { KeyboardAvoidingView, Platform, ScrollView } from 'react-native';
 import { useForm, Controller } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import MaskInput from 'react-native-mask-input';
@@ -56,13 +57,23 @@ export const Step3Screen: React.FC = () => {
 
   return (
     <View flex={1} backgroundColor="$background">
-      <YStack flex={1} justifyContent="center" padding="$6" gap="$5">
-        <Text fontSize="$8" fontWeight="700" color="$text">
-          Qual é o seu salário?
-        </Text>
-        <Text fontSize="$4" color="$muted">
-          Informe o valor base do seu salário
-        </Text>
+      <KeyboardAvoidingView
+        behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
+        style={{ flex: 1 }}
+        keyboardVerticalOffset={Platform.OS === 'ios' ? 0 : 20}
+      >
+        <ScrollView
+          contentContainerStyle={{ flexGrow: 1 }}
+          keyboardShouldPersistTaps="handled"
+          showsVerticalScrollIndicator={false}
+        >
+          <YStack flex={1} justifyContent="center" padding="$6" gap="$5" minHeight={600}>
+            <Text fontSize="$8" fontWeight="700" color="$text">
+              Qual é o seu salário?
+            </Text>
+            <Text fontSize="$4" color="$muted">
+              Informe o valor base do seu salário
+            </Text>
         <YStack gap="$2">
           <Text fontSize="$3" color="$text" fontWeight="600">
             Salário base
@@ -164,10 +175,12 @@ export const Step3Screen: React.FC = () => {
           height={56}
           fontSize="$5"
           fontWeight="600"
-        >
-          Continuar
-        </Button>
-      </YStack>
+            >
+              Continuar
+            </Button>
+          </YStack>
+        </ScrollView>
+      </KeyboardAvoidingView>
     </View>
   );
 };

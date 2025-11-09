@@ -3,6 +3,7 @@ import { useNavigation } from '@react-navigation/native';
 import { StackNavigationProp } from '@react-navigation/stack';
 import React from 'react';
 import { Controller, useForm } from 'react-hook-form';
+import { KeyboardAvoidingView, Platform, ScrollView } from 'react-native';
 import MaskInput from 'react-native-mask-input';
 import { Button, Text, View, YStack, RadioGroup, Label, XStack } from 'tamagui';
 
@@ -45,13 +46,23 @@ export const Step2Screen: React.FC = () => {
 
   return (
     <View flex={1} backgroundColor="$background">
-      <YStack flex={1} justifyContent="center" padding="$6" gap="$5">
-        <Text fontSize="$8" fontWeight="700" color="$text">
-          Quando você foi admitido?
-        </Text>
-        <Text fontSize="$4" color="$muted">
-          Informe a data de início do seu vínculo trabalhista
-        </Text>
+      <KeyboardAvoidingView
+        behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
+        style={{ flex: 1 }}
+        keyboardVerticalOffset={Platform.OS === 'ios' ? 0 : 20}
+      >
+        <ScrollView
+          contentContainerStyle={{ flexGrow: 1 }}
+          keyboardShouldPersistTaps="handled"
+          showsVerticalScrollIndicator={false}
+        >
+          <YStack flex={1} justifyContent="center" padding="$6" gap="$5" minHeight={600}>
+            <Text fontSize="$8" fontWeight="700" color="$text">
+              Quando você foi admitido?
+            </Text>
+            <Text fontSize="$4" color="$muted">
+              Informe a data de início do seu vínculo trabalhista
+            </Text>
         <YStack gap="$2">
           <Text fontSize="$3" color="$text" fontWeight="600">
             Data de admissão
@@ -122,10 +133,12 @@ export const Step2Screen: React.FC = () => {
           height={56}
           fontSize="$5"
           fontWeight="600"
-        >
-          Continuar
-        </Button>
-      </YStack>
+            >
+              Continuar
+            </Button>
+          </YStack>
+        </ScrollView>
+      </KeyboardAvoidingView>
     </View>
   );
 };
