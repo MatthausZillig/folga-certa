@@ -1,3 +1,5 @@
+import type { VacationSimulation } from '../types';
+
 export type RootStackParamList = {
   Onboarding: undefined;
   App: undefined;
@@ -14,7 +16,7 @@ export type OnboardingStackParamList = {
 
 export type AppTabsParamList = {
   Home: undefined;
-  Simulation: undefined;
+  Simulation: { simulation?: VacationSimulation } | undefined;
   Profile: undefined;
 };
 

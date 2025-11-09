@@ -3,6 +3,7 @@ import { NavigationContainer } from '@react-navigation/native';
 import * as SplashScreen from 'expo-splash-screen';
 import React, { useEffect, useState } from 'react';
 import { ActivityIndicator, View } from 'react-native';
+import { SafeAreaProvider } from 'react-native-safe-area-context';
 
 import { RootNavigator } from './src/navigation';
 import { AppThemeProvider } from './src/theme';
@@ -51,9 +52,11 @@ const App: React.FC = () => {
 
   return (
     <AppThemeProvider>
-      <NavigationContainer>
-        <RootNavigator />
-      </NavigationContainer>
+      <SafeAreaProvider>
+        <NavigationContainer>
+          <RootNavigator />
+        </NavigationContainer>
+      </SafeAreaProvider>
     </AppThemeProvider>
   );
 };

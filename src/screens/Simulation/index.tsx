@@ -1,21 +1,36 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { Text, View, YStack, XStack, Button } from 'tamagui';
 import { ScrollView, TouchableOpacity } from 'react-native';
 import { useForm, Controller } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import MaskInput from 'react-native-mask-input';
-import { useNavigation } from '@react-navigation/native';
+import { useNavigation, useRoute, RouteProp } from '@react-navigation/native';
 
 import { useProfile } from '../../store/useProfileStore';
 import { useAddSimulation } from '../../store/useSimulationStore';
 import { simulationSchema, type SimulationData, dateMask, calculateVacation, formatCurrencyBR } from '../../utils';
 import type { VacationResult } from '../../utils/calcVacation';
+import type { AppTabsParamList } from '../../navigation/types';
+
+type SimulationScreenRouteProp = RouteProp<AppTabsParamList, 'Simulation'>;
 
 export const SimulationScreen: React.FC = () => {
   const navigation = useNavigation();
+  const route = useRoute<SimulationScreenRouteProp>();
   const profile = useProfile();
   const addSimulation = useAddSimulation();
   const [result, setResult] = useState<VacationResult | null>(null);
+  const [isFromSavedSimulation, setIsFromSavedSimulation] = useState(false);
+
+  useEffect(() => {
+    if (route.params?.simulation) {
+      setResult(route.params.simulation.result);
+      setIsFromSavedSimulation(true);
+    } else {
+      setResult(null);
+      setIsFromSavedSimulation(false);
+    }
+  }, [route.params]);
 
   const {
     control,
@@ -55,7 +70,17 @@ export const SimulationScreen: React.FC = () => {
 
   const handleNewSimulation = () => {
     setResult(null);
+    setIsFromSavedSimulation(false);
     reset();
+    navigation.setParams({ simulation: undefined } as any);
+  };
+
+  const handleBack = () => {
+    if (isFromSavedSimulation) {
+      navigation.goBack();
+    } else {
+      setResult(null);
+    }
   };
 
   if (result) {
@@ -64,7 +89,7 @@ export const SimulationScreen: React.FC = () => {
         <ScrollView>
           <YStack padding="$6" gap="$5">
             <XStack alignItems="center" gap="$3">
-              <TouchableOpacity onPress={() => setResult(null)}>
+              <TouchableOpacity onPress={handleBack}>
                 <View
                   width={40}
                   height={40}

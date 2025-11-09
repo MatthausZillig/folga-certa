@@ -1,14 +1,16 @@
-import React from 'react';
-import { Text, View, YStack, XStack, Button } from 'tamagui';
+import React, { useCallback } from 'react';
+import { Text, View, YStack, XStack, Button, Separator } from 'tamagui';
 import { useNavigation } from '@react-navigation/native';
 import { BottomTabNavigationProp } from '@react-navigation/bottom-tabs';
 import { ScrollView } from 'react-native';
+import { useSafeAreaInsets } from 'react-native-safe-area-context';
 
 import { useProfile } from '../../store/useProfileStore';
 import { useSimulations } from '../../store/useSimulationStore';
 import { formatCurrencyBR } from '../../utils';
 import { SimulationTicket } from '../../components/SimulationTicket';
 import type { AppTabsParamList } from '../../navigation/types';
+import type { VacationSimulation } from '../../types/simulation';
 
 type HomeNavigationProp = BottomTabNavigationProp<AppTabsParamList, 'Home'>;
 
@@ -16,20 +18,29 @@ export const HomeScreen: React.FC = () => {
   const navigation = useNavigation<HomeNavigationProp>();
   const profile = useProfile();
   const simulations = useSimulations();
+  const insets = useSafeAreaInsets();
 
-  const getEndDate = (startDate: string, days: number) => {
+  const getEndDate = useCallback((startDate: string, days: number) => {
     const date = new Date(startDate + 'T00:00:00');
     date.setDate(date.getDate() + days - 1);
     const year = date.getFullYear();
     const month = String(date.getMonth() + 1).padStart(2, '0');
     const day = String(date.getDate()).padStart(2, '0');
     return `${year}-${month}-${day}`;
-  };
+  }, []);
+
+  const handleSimulatePress = useCallback(() => {
+    navigation.navigate('Simulation', { simulation: undefined });
+  }, [navigation]);
+
+  const handleTicketPress = useCallback((sim: VacationSimulation) => {
+    navigation.navigate('Simulation', { simulation: sim });
+  }, [navigation]);
 
   return (
     <View flex={1} backgroundColor="$background">
       <ScrollView showsVerticalScrollIndicator={false}>
-        <YStack padding="$6" gap="$6">
+        <YStack padding="$6" paddingTop={insets.top + 24} gap="$6">
           <YStack gap="$2">
             <Text fontSize="$8" fontWeight="700" color="$text">
               Olá, {profile?.displayName}!
@@ -45,16 +56,14 @@ export const HomeScreen: React.FC = () => {
             borderRadius="$4"
             borderWidth={1}
             borderColor="$border"
-            gap="$3"
-            shadowColor="#000"
-            shadowOffset={{ width: 0, height: 2 }}
-            shadowOpacity={0.06}
-            shadowRadius={8}
-            elevation={3}
+            gap="$4"
           >
             <Text fontSize="$5" fontWeight="600" color="$text">
               Seu Perfil
             </Text>
+            
+            <Separator borderColor="$border" />
+            
             <YStack gap="$2">
               <XStack justifyContent="space-between">
                 <Text fontSize="$3" color="$muted">
@@ -95,7 +104,7 @@ export const HomeScreen: React.FC = () => {
             height={56}
             fontSize="$5"
             fontWeight="600"
-            onPress={() => navigation.navigate('Simulation')}
+            onPress={handleSimulatePress}
             pressStyle={{ opacity: 0.8 }}
           >
             Simular Férias
@@ -121,6 +130,7 @@ export const HomeScreen: React.FC = () => {
                     endDate={getEndDate(sim.input.startDate, sim.input.vacationDays)}
                     liquidoFerias={sim.result?.liquidoFerias || 0}
                     advance13th={sim.input.advance13th}
+                    onPress={() => handleTicketPress(sim)}
                   />
                 ))}
               </YStack>

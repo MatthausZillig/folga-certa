@@ -1,5 +1,6 @@
-import React from 'react';
+import React, { memo, useMemo } from 'react';
 import { Text, View, XStack, YStack } from 'tamagui';
+import { TouchableOpacity } from 'react-native';
 import { formatCurrencyBR } from '../utils';
 
 type SimulationTicketProps = {
@@ -8,27 +9,31 @@ type SimulationTicketProps = {
   endDate: string;
   liquidoFerias: number;
   advance13th?: boolean;
+  onPress?: () => void;
 };
 
-export const SimulationTicket: React.FC<SimulationTicketProps> = ({
+const SimulationTicketComponent: React.FC<SimulationTicketProps> = ({
   vacationDays,
   startDate,
   endDate,
   liquidoFerias,
   advance13th,
+  onPress,
 }) => {
-  const formatDateShort = (dateStr: string) => {
-    const [year, month, day] = dateStr.split('-');
-    const months = ['Jan', 'Fev', 'Mar', 'Abr', 'Mai', 'Jun', 'Jul', 'Ago', 'Set', 'Out', 'Nov', 'Dez'];
-    return `${day} ${months[parseInt(month, 10) - 1]}`;
-  };
+  const formatDateShort = useMemo(() => {
+    return (dateStr: string) => {
+      const [year, month, day] = dateStr.split('-');
+      const months = ['Jan', 'Fev', 'Mar', 'Abr', 'Mai', 'Jun', 'Jul', 'Ago', 'Set', 'Out', 'Nov', 'Dez'];
+      return `${day} ${months[parseInt(month, 10) - 1]}`;
+    };
+  }, []);
 
-  return (
+  const formattedLiquido = useMemo(() => formatCurrencyBR(liquidoFerias), [liquidoFerias]);
+
+  const content = (
     <View
       backgroundColor="$card"
       borderRadius="$4"
-      borderWidth={1}
-      borderColor="$border"
       overflow="hidden"
       position="relative"
     >
@@ -82,7 +87,7 @@ export const SimulationTicket: React.FC<SimulationTicketProps> = ({
           paddingHorizontal="$4"
           justifyContent="space-between"
           alignItems="center"
-          backgroundColor="$cardAlt"
+          backgroundColor="$card"
           borderTopWidth={1.5}
           borderTopColor="$border"
           borderStyle="dashed"
@@ -92,7 +97,7 @@ export const SimulationTicket: React.FC<SimulationTicketProps> = ({
               Valor Líquido
             </Text>
             <Text fontSize="$6" color="$accent" fontWeight="700" letterSpacing={-0.5}>
-              {formatCurrencyBR(liquidoFerias)}
+              {formattedLiquido}
             </Text>
           </YStack>
         </XStack>
@@ -100,30 +105,36 @@ export const SimulationTicket: React.FC<SimulationTicketProps> = ({
 
       <View 
         position="absolute" 
-        left={-6} 
-        top="50%" 
-        width={12} 
-        height={12} 
-        borderRadius={6} 
+        left={-8} 
+        top="62%" 
+        width={16} 
+        height={16} 
+        borderRadius={8} 
         backgroundColor="$background"
-        borderWidth={1}
-        borderColor="$border"
-        borderRightWidth={0}
-        transform={[{ translateY: -6 }]}
+        transform={[{ translateY: -8 }]}
       />
       <View 
         position="absolute" 
-        right={-6} 
-        top="50%" 
-        width={12} 
-        height={12} 
-        borderRadius={6} 
+        right={-8} 
+        top="62%" 
+        width={16} 
+        height={16} 
+        borderRadius={8} 
         backgroundColor="$background"
-        borderWidth={1}
-        borderColor="$border"
-        borderLeftWidth={0}
-        transform={[{ translateY: -6 }]}
+        transform={[{ translateY: -8 }]}
       />
     </View>
   );
+
+  if (onPress) {
+    return (
+      <TouchableOpacity onPress={onPress} activeOpacity={0.7}>
+        {content}
+      </TouchableOpacity>
+    );
+  }
+
+  return content;
 };
+
+export const SimulationTicket = memo(SimulationTicketComponent);
