@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { Text, View, YStack, XStack, Button } from 'tamagui';
+import { Text, View, YStack, XStack, Button, Switch, Label } from 'tamagui';
 import { ScrollView, TouchableOpacity } from 'react-native';
 import { useForm, Controller } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
@@ -396,47 +396,25 @@ export const SimulationScreen: React.FC = () => {
             )}
           </YStack>
 
-          <YStack gap="$3">
-            <Text fontSize="$3" color="$text" fontWeight="600">
+          <YStack gap="$4">
+            <Text fontSize="$4" color="$text" fontWeight="600">
               Deseja adiantar o 13º salário?
             </Text>
-            <Text fontSize="$2" color="$muted" marginBottom="$1">
+            <Text fontSize="$3" color="$muted" marginBottom="$2">
               Você pode receber 50% do 13º junto com as férias
             </Text>
             <Controller
               control={control}
               name="advance13th"
               render={({ field: { onChange, value } }) => (
-                <YStack gap="$2">
-                  <TouchableOpacity onPress={() => onChange(true)}>
-                    <XStack
-                      backgroundColor={value === true ? '$accent' : '$card'}
-                      padding="$3"
-                      borderRadius="$4"
-                      borderWidth={1}
-                      borderColor={value === true ? '$accent' : '$border'}
-                      alignItems="center"
-                    >
-                      <Text fontSize="$4" color={value === true ? '$textDark' : '$text'}>
-                        Sim, quero adiantar
-                      </Text>
-                    </XStack>
-                  </TouchableOpacity>
-                  <TouchableOpacity onPress={() => onChange(false)}>
-                    <XStack
-                      backgroundColor={value === false ? '$accent' : '$card'}
-                      padding="$3"
-                      borderRadius="$4"
-                      borderWidth={1}
-                      borderColor={value === false ? '$accent' : '$border'}
-                      alignItems="center"
-                    >
-                      <Text fontSize="$4" color={value === false ? '$textDark' : '$text'}>
-                        Não, obrigado
-                      </Text>
-                    </XStack>
-                  </TouchableOpacity>
-                </YStack>
+                <XStack alignItems="center" justifyContent="space-between">
+                  <Label fontSize="$5" color="$text">
+                    {value ? 'Sim, quero adiantar' : 'Não, obrigado'}
+                  </Label>
+                  <Switch size="$5" checked={value} onCheckedChange={onChange}>
+                    <Switch.Thumb animation="quick" />
+                  </Switch>
+                </XStack>
               )}
             />
           </YStack>

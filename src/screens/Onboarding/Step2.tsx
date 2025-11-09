@@ -3,9 +3,8 @@ import { useNavigation } from '@react-navigation/native';
 import { StackNavigationProp } from '@react-navigation/stack';
 import React from 'react';
 import { Controller, useForm } from 'react-hook-form';
-import { TouchableOpacity } from 'react-native';
 import MaskInput from 'react-native-mask-input';
-import { Button, Text, View, XStack, YStack } from 'tamagui';
+import { Button, Text, View, YStack, RadioGroup, Label, XStack } from 'tamagui';
 
 import type { OnboardingStackParamList } from '../../navigation/types';
 import { useProfile, useSetProfile } from '../../store/useProfileStore';
@@ -88,35 +87,28 @@ export const Step2Screen: React.FC = () => {
             </Text>
           )}
         </YStack>
-        <YStack gap="$3">
-          <Text fontSize="$3" color="$text" fontWeight="600">
+        <YStack gap="$4">
+          <Text fontSize="$4" color="$text" fontWeight="600">
             Tipo de contrato
           </Text>
           <Controller
             control={control}
             name="contractType"
             render={({ field: { onChange, value } }) => (
-              <YStack gap="$2">
-                {contractOptions.map((item) => (
-                  <TouchableOpacity key={item.value} onPress={() => onChange(item.value)}>
-                    <XStack
-                      backgroundColor={value === item.value ? '$accent' : '$card'}
-                      padding="$3"
-                      borderRadius="$4"
-                      borderWidth={1}
-                      borderColor={value === item.value ? '$accent' : '$border'}
-                      alignItems="center"
-                    >
-                      <Text
-                        fontSize="$4"
-                        color={value === item.value ? '$textDark' : '$text'}
-                      >
+              <RadioGroup value={value} onValueChange={onChange}>
+                <YStack gap="$3">
+                  {contractOptions.map((item) => (
+                    <XStack key={item.value} gap="$3" alignItems="center">
+                      <RadioGroup.Item value={item.value} id={item.value} size="$5">
+                        <RadioGroup.Indicator />
+                      </RadioGroup.Item>
+                      <Label htmlFor={item.value} fontSize="$5" color="$text">
                         {item.label}
-                      </Text>
+                      </Label>
                     </XStack>
-                  </TouchableOpacity>
-                ))}
-              </YStack>
+                  ))}
+                </YStack>
+              </RadioGroup>
             )}
           />
         </YStack>

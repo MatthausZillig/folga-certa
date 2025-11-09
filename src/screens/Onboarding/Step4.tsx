@@ -32,19 +32,16 @@ export const Step4Screen: React.FC = () => {
         <Text fontSize="$4" color="$muted">
           Como comissões, horas extras, bonificações, etc.
         </Text>
-        <XStack alignItems="center" gap="$3" paddingVertical="$2">
-          <Switch
-            size="$4"
-            checked={hasVariable}
-            onCheckedChange={setHasVariable}
-            backgroundColor={hasVariable ? '$accent' : '$border'}
-          >
-            <Switch.Thumb animation="quick" backgroundColor="$card" />
-          </Switch>
-          <Label fontSize="$4" color="$text">
-            {hasVariable ? 'Sim, recebo' : 'Não recebo'}
-          </Label>
-        </XStack>
+        <YStack gap="$4">
+          <XStack alignItems="center" justifyContent="space-between">
+            <Label fontSize="$5" color="$text">
+              {hasVariable ? 'Sim, recebo' : 'Não recebo'}
+            </Label>
+            <Switch size="$5" checked={hasVariable} onCheckedChange={setHasVariable}>
+              <Switch.Thumb animation="quick" />
+            </Switch>
+          </XStack>
+        </YStack>
         {hasVariable && (
           <YStack gap="$3" animation="quick">
             <Text fontSize="$3" color="$text" fontWeight="600">

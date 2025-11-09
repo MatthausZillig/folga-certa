@@ -1,8 +1,7 @@
 import React from 'react';
-import { Button, Text, View, YStack, XStack } from 'tamagui';
+import { Button, Text, View, YStack, XStack, RadioGroup, Label } from 'tamagui';
 import { useNavigation } from '@react-navigation/native';
 import { StackNavigationProp } from '@react-navigation/stack';
-import { TouchableOpacity } from 'react-native';
 import { useForm, Controller } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import MaskInput from 'react-native-mask-input';
@@ -100,78 +99,58 @@ export const Step3Screen: React.FC = () => {
             </Text>
           )}
         </YStack>
-        <YStack gap="$3">
-          <Text fontSize="$3" color="$text" fontWeight="600">
+        <YStack gap="$4">
+          <Text fontSize="$4" color="$text" fontWeight="600">
             Frequência de pagamento
           </Text>
           <Controller
             control={control}
             name="paymentFrequency"
             render={({ field: { onChange, value } }) => (
-              <YStack gap="$2">
-                {frequencyOptions.map((item) => (
-                  <TouchableOpacity key={item.value} onPress={() => onChange(item.value)}>
-                    <XStack
-                      backgroundColor={value === item.value ? '$accent' : '$card'}
-                      padding="$3"
-                      borderRadius="$4"
-                      borderWidth={1}
-                      borderColor={value === item.value ? '$accent' : '$border'}
-                      alignItems="center"
-                    >
-                      <Text
-                        fontSize="$4"
-                        color={value === item.value ? '$textDark' : '$text'}
-                      >
+              <RadioGroup value={value} onValueChange={onChange}>
+                <YStack gap="$3">
+                  {frequencyOptions.map((item) => (
+                    <XStack key={item.value} gap="$3" alignItems="center">
+                      <RadioGroup.Item value={item.value} id={item.value} size="$5">
+                        <RadioGroup.Indicator />
+                      </RadioGroup.Item>
+                      <Label htmlFor={item.value} fontSize="$5" color="$text">
                         {item.label}
-                      </Text>
+                      </Label>
                     </XStack>
-                  </TouchableOpacity>
-                ))}
-              </YStack>
+                  ))}
+                </YStack>
+              </RadioGroup>
             )}
           />
         </YStack>
-        <YStack gap="$3">
-          <Text fontSize="$3" color="$text" fontWeight="600">
+        <YStack gap="$4">
+          <Text fontSize="$4" color="$text" fontWeight="600">
             Quando você recebe no mês?
           </Text>
           <Controller
             control={control}
             name="paymentPeriod"
             render={({ field: { onChange, value } }) => (
-              <YStack gap="$2">
-                {periodOptions.map((item) => (
-                  <TouchableOpacity key={item.value} onPress={() => onChange(item.value)}>
-                    <XStack
-                      backgroundColor={value === item.value ? '$accent' : '$card'}
-                      padding="$4"
-                      borderRadius="$4"
-                      borderWidth={1}
-                      borderColor={value === item.value ? '$accent' : '$border'}
-                      alignItems="center"
-                      justifyContent="space-between"
-                    >
-                      <YStack gap="$1">
-                        <Text
-                          fontSize="$4"
-                          color={value === item.value ? '$textDark' : '$text'}
-                          fontWeight="600"
-                        >
+              <RadioGroup value={value} onValueChange={onChange}>
+                <YStack gap="$3">
+                  {periodOptions.map((item) => (
+                    <XStack key={item.value} gap="$3" alignItems="center">
+                      <RadioGroup.Item value={item.value} id={item.value} size="$5">
+                        <RadioGroup.Indicator />
+                      </RadioGroup.Item>
+                      <YStack flex={1}>
+                        <Label htmlFor={item.value} fontSize="$5" color="$text">
                           {item.label}
-                        </Text>
-                        <Text
-                          fontSize="$2"
-                          color={value === item.value ? '$textDark' : '$muted'}
-                          opacity={0.8}
-                        >
+                        </Label>
+                        <Text fontSize="$3" color="$muted">
                           {item.description}
                         </Text>
                       </YStack>
                     </XStack>
-                  </TouchableOpacity>
-                ))}
-              </YStack>
+                  ))}
+                </YStack>
+              </RadioGroup>
             )}
           />
         </YStack>
